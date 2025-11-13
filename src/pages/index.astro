@@ -48,3 +48,38 @@ const repoLink = 'https://github.com/cloudflare/templates/tree/main/saas-admin-t
     </div>
   </body>
 </html>
+
+const adminBtn = document.getElementById('adminBtn');
+const loginPopup = document.getElementById('loginPopup');
+const closePopup = document.getElementById('closePopup');
+const loginBtn = document.getElementById('loginBtn');
+const msg = document.getElementById('msg');
+
+adminBtn.addEventListener('click', () => {
+  loginPopup.style.display = 'flex';
+});
+
+closePopup.addEventListener('click', () => {
+  loginPopup.style.display = 'none';
+});
+
+loginBtn.addEventListener('click', async () => {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const response = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  const result = await response.json();
+  msg.textContent = result.message;
+
+  if (result.success) {
+    localStorage.setItem('auth', 'true');
+    loginPopup.style.display = 'none';
+    window.location.href = '/admin.html'; // redirect to your admin page
+  }
+});
+
